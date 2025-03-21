@@ -130,14 +130,15 @@ const Navbar = ({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  to="/logout"
-                  className="cursor-pointer w-full flex items-center"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
-                </Link>
+              <DropdownMenuItem
+                className="cursor-pointer w-full flex items-center"
+                onClick={() => {
+                  // Handle logout
+                  window.location.href = "/";
+                }}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

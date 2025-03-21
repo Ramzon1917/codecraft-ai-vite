@@ -31,7 +31,14 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Pencil, LogOut, Settings } from "lucide-react";
+import { Pencil, LogOut, Settings, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -53,6 +60,7 @@ interface UserProfileCardProps {
   };
   onLogout?: () => void;
   onUpdateProfile?: (data: ProfileFormValues) => void;
+  compact?: boolean;
 }
 
 const UserProfileCard = ({
@@ -66,8 +74,9 @@ const UserProfileCard = ({
   },
   onLogout = () => console.log("Logout clicked"),
   onUpdateProfile = (data) => console.log("Profile updated", data),
+  compact = false,
 }: UserProfileCardProps) => {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(true);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -83,6 +92,50 @@ const UserProfileCard = ({
     onUpdateProfile(data);
     setIsEditDialogOpen(false);
   };
+
+  if (compact) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Avatar>
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback className="bg-primary/10 text-primary">
+                {user.name.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <div className="flex items-center justify-start gap-2 p-2">
+            <div className="flex flex-col space-y-1 leading-none">
+              <p className="font-medium">{user.name}</p>
+              <p className="text-sm text-muted-foreground">{user.email}</p>
+              {user.plan && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary mt-1">
+                  {user.plan} Plan
+                </span>
+              )}
+            </div>
+          </div>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={onLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Logout</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
   return (
     <Card className="w-full max-w-md bg-white shadow-md">
@@ -222,5 +275,7 @@ const UserProfileCard = ({
     </Card>
   );
 };
+
+export default UserProfileCard;
 
 export default UserProfileCard;
