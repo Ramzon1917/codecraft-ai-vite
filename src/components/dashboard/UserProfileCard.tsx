@@ -277,5 +277,3 @@ const UserProfileCard = ({
 };
 
 export default UserProfileCard;
-
-export default UserProfileCard;

@@ -14,12 +14,15 @@ const GenerationPage = () => {
   const navigate = useNavigate();
   const { getProject, addProject } = useProjects();
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState<"generating" | "completed" | "failed">("generating");
+  const [status, setStatus] = useState<"generating" | "completed" | "failed">(
+    "generating",
+  );
   const [activeTab, setActiveTab] = useState("frontend");
 
   // If projectId is "new", show the form to create a new project
   const isNewProject = projectId === "new";
-  const project = !isNewProject && projectId ? getProject(projectId) : undefined;
+  const project =
+    !isNewProject && projectId ? getProject(projectId) : undefined;
 
   useEffect(() => {
     if (!project || isNewProject) return;
@@ -125,15 +128,22 @@ const GenerationPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Status Panel */}
         <div className="lg:col-span-3 space-y-4">
-          <GenerationProgress 
-            progress={progress} 
-            status={status} 
+          <GenerationProgress
+            progress={progress}
+            status={status}
             onApprove={handleApproveCode}
             onRegenerate={handleRequestChanges}
           />
           <ProjectDetails project={project} />
         </div>
 
-        {/* Code Preview */
+        {/* Code Preview */}
+        <div className="lg:col-span-9">
+          <CodePreview activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+};
 
 export default GenerationPage;
